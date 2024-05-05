@@ -1,0 +1,301 @@
+login as: root
+root@13.127.246.115's password:
+
+
+[root@AMI-USER-45 ~]# aws s3 ls
+
+Unable to locate credentials. You can configure credentials by running "aws configure".
+[root@AMI-USER-45 ~]# aws configure
+AWS Access Key ID [None]: 
+AWS Secret Access Key [None]: 
+Default region name [None]: ap-south-1
+Default output format [None]:
+[root@AMI-USER-45 ~]# aws s3 ls
+2024-03-13 17:51:00 phani1234
+[root@AMI-USER-45 ~]#
+[root@AMI-USER-45 ~]# ls -la
+total 52
+dr-xr-x---.  4 root root   191 Mar 15 20:13 .
+dr-xr-xr-x. 18 root root   237 Jan  6 19:59 ..
+drwxr-xr-x.  2 root root    39 Mar 15 20:13 .aws
+-rw-------.  1 root root  2192 Jan  7 17:14 .bash_history
+-rw-r--r--.  1 root root    18 Feb  2  2023 .bash_logout
+-rw-r--r--.  1 root root   141 Feb  2  2023 .bash_profile
+-rw-r--r--.  1 root root   429 Feb  2  2023 .bashrc
+-rw-r--r--.  1 root root   100 Feb  2  2023 .cshrc
+-rw-------.  1 root root    20 Jan  2 12:19 .lesshst
+drwx------.  2 root root    29 Jan  2 09:36 .ssh
+-rw-r--r--.  1 root root   129 Feb  2  2023 .tcshrc
+-rw-------.  1 root root 11285 Jan  7 17:14 .viminfo
+-rw-r--r--.  1 root root   981 Jan  6 20:00 11
+-rwxrwxrwx.  1 root root  4334 Jan  6 20:01 users
+[root@AMI-USER-45 ~]# cd .aws
+[root@AMI-USER-45 .aws]# ls
+config  credentials
+[root@AMI-USER-45 .aws]#
+[root@AMI-USER-45 .aws]# ll
+total 8
+-rw-------. 1 root root  30 Mar 15 20:13 config
+-rw-------. 1 root root 116 Mar 15 20:13 credentials
+[root@AMI-USER-45 .aws]# cat config
+[default]
+region = ap-south-1
+[root@AMI-USER-45 .aws]#
+[root@AMI-USER-45 .aws]# cat credentials
+[default]
+aws_access_key_id = AKIAW5L5MXI7DO7ZDGTJ
+aws_secret_access_key = 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
+[root@AMI-USER-45 .aws]#
+[root@AMI-USER-45 .aws]# cd
+[root@AMI-USER-45 ~]#
+[root@AMI-USER-45 ~]# aws s3 ls
+2024-03-13 17:51:00 phani1234
+[root@AMI-USER-45 ~]#
+[root@AMI-USER-45 ~]# aws s3 mb s3://saibabu143
+make_bucket: saibabu143
+[root@AMI-USER-45 ~]#
+[root@AMI-USER-45 ~]# aws s3 ls
+2024-03-13 17:51:00 phani1234
+2024-03-15 20:17:37 saibabu143
+[root@AMI-USER-45 ~]#
+[root@AMI-USER-45 ~]# ll
+total 12
+-rw-r--r--. 1 root root  981 Jan  6 20:00 11
+-rwxrwxrwx. 1 root root 4334 Jan  6 20:01 users
+[root@AMI-USER-45 ~]# cat ll
+cat: ll: No such file or directory
+[root@AMI-USER-45 ~]#
+[root@AMI-USER-45 ~]# ll
+total 12
+-rw-r--r--. 1 root root  981 Jan  6 20:00 11
+-rwxrwxrwx. 1 root root 4334 Jan  6 20:01 users
+[root@AMI-USER-45 ~]#
+[root@AMI-USER-45 ~]# aws s3 ls
+2024-03-13 17:51:00 phani1234
+2024-03-15 20:17:37 saibabu143
+[root@AMI-USER-45 ~]#
+[root@AMI-USER-45 ~]# aws s3 cp users s3://saibabu143
+upload: ./users to s3://saibabu143/users
+[root@AMI-USER-45 ~]#
+[root@AMI-USER-45 ~]# aws s3 ls s3://saibabu143
+2024-03-15 20:21:29       4334 users
+
+[root@AMI-USER-45 ~]# aws ec2 run-instances --image-id ami-0fbb9831f66fded15 --count 1 --instance-type t2.micro --key-name AMI-USER --security-group-ids sg-0fa27763fb66485d2 --subnet-id subnet-0fe453eec85e53888
+{
+    "Groups": [],
+    "Instances": [
+        {
+            "AmiLaunchIndex": 0,
+            "ImageId": "ami-0fbb9831f66fded15",
+            "InstanceId": "i-05bc42ddec8317694",
+            "InstanceType": "t2.micro",
+            "KeyName": "AMI-USER",
+            "LaunchTime": "2024-03-15T20:45:39+00:00",
+            "Monitoring": {
+                "State": "disabled"
+            },
+            "Placement": {
+                "AvailabilityZone": "ap-south-1b",
+                "GroupName": "",
+                "Tenancy": "default"
+            },
+            "PrivateDnsName": "ip-172-31-9-230.ap-south-1.compute.internal",
+            "PrivateIpAddress": "172.31.9.230",
+            "ProductCodes": [],
+            "PublicDnsName": "",
+            "State": {
+                "Code": 0,
+                "Name": "pending"
+            },
+[root@AMI-USER-45 ~]#
+[root@AMI-USER-45 ~]# aws s3 ls
+2024-03-13 17:51:00 phani1234
+2024-03-15 20:17:37 saibabu143
+[root@AMI-USER-45 ~]#
+[root@AMI-USER-45 ~]# aws s3 ls s3://saibabu143
+2024-03-15 20:21:29       4334 users
+[root@AMI-USER-45 ~]#
+[root@AMI-USER-45 ~]# aws s3 rm s3://saibabu143/users
+delete: s3://saibabu143/users
+[root@AMI-USER-45 ~]#
+[root@AMI-USER-45 ~]# aws s3 ls s3://saibabu143
+[root@AMI-USER-45 ~]#
+[root@AMI-USER-45 ~]# aws s3 ls
+2024-03-13 17:51:00 phani1234
+2024-03-15 20:17:37 saibabu143
+[root@AMI-USER-45 ~]# aws s3 rb s3://saibabu143
+remove_bucket: saibabu143
+[root@AMI-USER-45 ~]#
+[root@AMI-USER-45 ~]# aws s3 ls
+2024-03-13 17:51:00 phani1234
+[root@AMI-USER-45 ~]#
+
+Web:  https://docs.aws.amazon.com/cli/latest/userguide/cli-services-ec2-instances.html
+
+aws ec2 run-instances   ============================> Command to create instance in cli
+--image-id ami-0fbb9831f66fded15 
+--count 1 
+--instance-type t2.micro 
+--key-name AMI-USER 
+--security-group-ids sg-0fa27763fb66485d2 
+--subnet-id subnet-0fe453eec85e53888
+
+
+#aws ec2 describe-instances|less  ==============> To check Instance status
+ InstanceId
+ InstanceType
+ AvailabilityZone
+ VolumeId
+ PlatformDetails
+ State
+ AvailabilityZone
+ PublicIp
+ IpOwnerId
+ RootDeviceType
+ GroupName
+
+
+# aws ec2 stop-instances --instance-ids i-0e3466fc25e28914b  ===============>  To stop instance
+{
+    "StoppingInstances": [
+        {
+            "CurrentState": {
+                "Code": 64,
+                "Name": "stopping"
+            },
+            "InstanceId": "i-0e3466fc25e28914b",
+            "PreviousState": {
+                "Code": 16,
+                "Name": "running"
+            }
+        }
+    ]
+}
+
+
+# aws ec2 start-instances --instance-ids i-0e3466fc25e28914b   ==============> To Start instance with instance id
+{
+    "StartingInstances": [
+        {
+            "CurrentState": {
+                "Code": 0,
+                "Name": "pending"
+            },
+            "InstanceId": "i-0e3466fc25e28914b",
+            "PreviousState": {
+                "Code": 80,
+                "Name": "stopped"
+            }
+        }
+    ]
+}
+
+
+
+================================================ COMMANDS =================================================================
+
+
+   #aws s3 ls
+   #aws s3 cp users s3://saibabu143
+   #aws s3 ls s3://saibabu143
+   #aws s3 rb s3://saibabu143
+   #aws s3 rm -rf s3://saibabu143
+   #aws s3  s3://saibabu143
+   #aws s3 ls
+   #aws ec2 run-instances --image-id ami-0fbb9831f66fded15 --count 1 --instance-type t2.micro --key-name AMI-USER
+   --security-group-ids sg-0fa27763fb66485d2 --subnet-id subnet-0fe453eec85e53888
+   #aws s3 ls
+   #aws s3 ls s3://saibabu143
+   #aws s3 rm s3://saibabu143/users
+   #aws s3 ls s3://saibabu143
+   #aws s3 ls
+   #aws s3 rb s3://saibabu143
+   #aws s3 ls
+   
+ =================================================================================================================================
+ 
+ #aws ec2 run-instances --image-id ami-0fbb9831f66fded15 --count 1 --instance-type t2.micro --key-name AMI-USER --security-group-ids sg-0fa27763fb66485d2 --subnet-id subnet-0785740f2f4453cde
+ 
+ 
+ 
+ #aws ec2 run-instances --image-id ami-0fbb9831f66fded15 --count 1 --instance-type t2.micro --key-name AMI-USER 
+ --security-group-ids sg-0119f730aa5bd613c --subnet-id subnet-0785740f2f4453cde
+  
+ 
+ aws ec2 describe-instances|grep -A 2 -i state
+ 
+ aws ec2 describe-instances|grep -A 3 -i state
+ 
+ aws ec2 describe-instances
+ 
+ aws ec2 describe-instances|grep -B 4 -i state
+ 
+ 
+ 
+ # aws ec2 start-instances --instance-ids "i-0393cf2224819fced"
+{
+    "StartingInstances": [
+        {
+            "CurrentState": {
+                "Code": 0,
+                "Name": "pending"
+            },
+            "InstanceId": "i-0393cf2224819fced",
+            "PreviousState": {
+                "Code": 80,
+                "Name": "stopped"
+            }
+        }
+    ]
+}
+
+
+
+# aws ec2 describe-instances|grep -B 5 -i state
+
+ "InstanceId": "i-0393cf2224819fced",
+                    "InstanceType": "t2.micro",
+                    "KeyName": "AMI-USER",
+                    "LaunchTime": "2024-03-25T14:44:43+00:00",
+                    "Monitoring": {
+                        "State": "disabled"
+--
+                    },
+                    "PrivateDnsName": "ip-10-45-1-232.ap-south-1.compute.internal",
+                    "PrivateIpAddress": "10.45.1.232",
+                    "ProductCodes": [],
+                    "PublicDnsName": "",
+                    "State": {
+                        "Code": 16,
+                        "Name": "running"
+						
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+]# aws ec2 terminate-instances --instance-ids "i-0393cf2224819fced"
+{
+    "TerminatingInstances": [
+        {
+            "CurrentState": {
+                "Code": 32,
+                "Name": "shutting-down"
+            },
+            "InstanceId": "i-0393cf2224819fced",
+            "PreviousState": {
+                "Code": 16,
+                "Name": "running"
+            }
+        }
+    ]
+}
+
+
+
+========================================================================================================================
+	
