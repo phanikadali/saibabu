@@ -1,0 +1,36 @@
+
+
+==================================> Superblock recovery in 7.6 <==================================
+
+  #df -h /data
+  
+  #umount /data 
+  
+  #dd if=/dev/zero of=/dev/vg1/lv1 bs=1M count=10  ============> To destroy superblock
+
+  #xfs_repair -L /dev/vg1/lv1 =============> If u dont use 'L' , ur data will be lost so use 'L'.
+  
+  #mount /dev/vg1/lv1 /data
+  
+ =======> No need to recover superblock from backup superblock ( mke2fs -n <bkp superblock id> <device name ) like in rhel 6.9
+  
+================================================================================================================================
+
+
+==================================> To See Superblock info in 7.6 <==================================
+
+  #df -h /data
+  
+  #umount /data/ 
+  
+  #xfs_db /dev/vg1/lv1
+  
+   xfs_db> sb  (superblock)
+   xfs_db> p  ===========> To display details such as the magic number, Inode info, UUID, block size, data blocks count, and more.
+   xfs_db> q    (To Quit)
+   
+  #mount /dev/vg1/lv1 /data
+  
+  #cd /data/  ===========> Data will be available.
+ 
+================================================================================================================================
