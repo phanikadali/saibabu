@@ -1,0 +1,87 @@
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>WINDOWS TO LINUX 6.9 SAMBA SHARE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+>>>>>>>>>>>>>  IN WINDOWS 
+
+Configure AD in windows server.
+ADD THE NEW DISK AND SHARE THE DISK WITH ALL PERMISSIONS(R,W,X).
+Check windows ip properly and stop firewalls in windows.
+Lable the drive as chiru name (drive D)
+
+
+>>>>>>>>>>>>> IN LINUX 6.9
+
+1)
+rpm -ivh samba-3.6.23-41.el6.x86_64.rpm
+chkconfig --level 2345 smb on
+chkconfig --list |grep -i smb
+service smb start
+rpm -ivh cifs-utils-4.8.1-20.el6.x86_64.rpm
+
+2)
+stop the firewalls 
+
+service iptables status
+getenforce
+service NetworkManager status
+
+3) 
+vi /etc/samba/smb.conf
+
+workgroup = samba.com
+server  = 10.10.45.151
+
+service smb restart
+
+4)
+mkdir /phani
+mount -t cifs -o username=phani //10.10.45.151/chiru /phani
+
+df -h /phani/
+Filesystem            Size  Used Avail Use% Mounted on
+//10.10.45.151/chiru  2.0G   39M  2.0G   2% /phani
+
+5) 
+vi /etc/samba-credential.conf
+username=phani
+password=P@55w0rd
+domain=samba.com
+
+chmod 600 /etc/samba-credential.conf
+service smb restart
+
+6)
+vi /etc/fstab
+//10.10.45.151/chiru    /phani  cifs    credentials=/etc/samba-credential.conf  0       0
+
+
+
+
+
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> To check samba share from linux 6.9
+
+[root@vara-server-45 ~]# smbclient //10.10.45.151/chiru -U phani
+Unknown parameter encountered: "server"
+Ignoring unknown parameter "server"
+Enter phani's password:
+Domain=[SAMBA] OS=[Windows Server 2008 R2 Enterprise 7601 Service Pack 1] Server=[Windows Server 2008 R2 Enterprise 6.1]
+smb: \> ls
+  $RECYCLE.BIN                      DHS        0  Fri May  3 00:07:33 2024
+  123                                 D        0  Fri May  3 00:33:54 2024
+  pavan                               D        0  Fri May  3 00:44:02 2024
+  Reddy                               D        0  Thu May  2 23:31:13 2024
+
+                65439 blocks of size 32768. 64223 blocks available
+smb: \>
+
+
+
+>>>>>>>>>>>>>>>> To check logs
+
+cd /var/log/samba
+ls
+cores  log.smbd  old
+cat log.smdb
+
