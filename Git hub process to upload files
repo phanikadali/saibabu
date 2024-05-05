@@ -1,0 +1,51 @@
+  >>>>>>>>>>>>>>>>>>>>>>> To install git and check version
+
+  #yum install git
+  #git --version
+  
+  >>>>>>>>>>>>>>>>>>>>>>> Login to Git Hub account 
+  
+  #git config --global user.name "phanikadali"
+  #git config --global user.email "phani.rhel7@gmail.com"
+  
+  >>>>>>>>>>>>>>>>>>>>>>> Creating ssh key in centos 7 
+  
+  #ssh-keygen -t ed25519 -C "phani.rhel7@gmail.com"
+  #cd .ssh
+  #ls
+  #cat id_ed25519.pub
+  
+  >>>>>>>>>>>>>>>>>>>>>>> Paste the ssh key path from script branch in Git Hub Account
+  Copy the created ssh code from linux vm to Git hub to estiblish connection from vm to git hub.
+  
+  open git-hub --> settings(right side) --> ssh & GPG keys --> Add linux key
+  
+  >>>>>>>>>>>>>>>>>>>>>>> Copy the Git hub scripy branch ssh code to linux vm
+  
+  #git clone git@github.com:phanikadali/scripts.git    
+  #ls
+  #cd scripts/
+  #ls
+  
+  >>>>>>>>>>>>>>>>>>>>>>> To create branch and coping all files to files branch
+  
+  #git branch -a  ---> To check branches and * indicates location
+  #git branch files  ----> To create Branch under main  (or)   #git branch -b <branch name>
+  #git checkout files  ---> To Shift branch from main to files 
+  
+  #git branch -a
+  #cp -r /tmp/scripts/* .  ---> Coping all files from /tmp/scripts/
+  #ls
+  
+  >>>>>>>>>>>>>>>>>>>>>>>To update files from files branch  
+  
+  #git add *  ---> Updating all files at a time
+  #git commit -m "updating all files in files branch"
+  #git push origin files
+  
+  >>>>>>>>>>>>>>>>>>>>>>> Merge files from files branch to main branch 
+  
+  #git branch -a
+  #git checkout main
+  #git merge files
+  #git push origin main
