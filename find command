@@ -1,0 +1,39 @@
+find .
+find /var -xdev -type f -ls|sort -rn --key=7|head -10
+find .
+find / -type d Packages
+find / -type d -iname Packages
+find / -iname Packages
+find / .
+find / .|wc -l
+find . -print
+find . -empty
+find / -iname phani
+find / -iname kernel
+find / -iname -type f kernel
+find / -iname kernel -type f
+find / -iname kernel -type d
+find / -size 10M
+find / -size 10M -ls
+find / -size -10M -ls|less
+find -perm 700
+find / -perm 700
+find / -perm 700|wc -l
+find / -size +5M -size -6M -ls
+find / -size -6M -ls
+find / -size 5M
+find / -size -5M -ls
+find / -size +5M -size 6M -ls
+find /etc/passwd -user phani -ls
+find / -user phani -ls
+find /home -user phani -ls
+find / -user vara -ls
+find /etc/passwd -user vara -ls
+find / -user mani -ls
+find / -user vara -ls
+find /tmp -type f -exec chmod 777 {} \;
+find /tmp -iname f3 -type f -exec chmod 700 {} \;
+find / -iname f5 -exec cp {} /var/tmp \;
+find /tmp -iname f* -type f -exec rm -rf {} \;
+find /tmp/* \( -iname f3 -o -iname h4 \) -exec rm -rf {} \;
+
