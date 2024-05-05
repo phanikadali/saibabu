@@ -1,0 +1,34 @@
+  #lsblk
+  #blkid
+  #multipath -a
+  #mount /dev/sr0 /mnt
+  #cd /mnt/Packages/
+  #ls device-mapper-multipath*
+  #rpm -ivh device-mapper-multipath-0.4.9-100.el6.x86_64.rpm
+  #rpm -ivh device-mapper-multipath-libs-0.4.9-100.el6.x86_64.rpm
+  #rpm -ivh device-mapper-multipath-0.4.9-100.el6.x86_64.rpm
+  #multipath -a
+  #multipath -ll
+  #service multipathd start
+  #cp /usr/share/doc/device-mapper-multipath-0.4.9/multipath.conf /etc/multipath.conf
+  #cat /etc/multipath.conf
+  #multipath -ll
+  #multipath -a
+  #init 6
+  #multipath -l
+  #service multipathd status
+  #service multipathd start
+  #chkconfig --level 345 multipathd on
+  #mkfs -t ext4 /dev/dm-0
+  #blkid
+  #mkdir /multipath
+  #mount -t ext4 /dev/mpathb /multipath
+  #lsblk
+  #blkid
+  #mount -t ext4 /dev/mapper/mpathb /multipath
+  #df -h /multipath
+  #vi /etc/fstab
+  #umount /multipath
+  #mount /multipath
+  #df -h /multipath
+  #cat /etc/fstab|grep -i /multipath
