@@ -1,0 +1,560 @@
+  
+  
+  
+  ansible --version
+  cat /etc/ansible/ansible.cfg
+  cat /etc/ansible/hosts
+ 
+---------------------------------------------------------------------------------------------------------------------------- 
+  
+  -m =====> module (ping, shell, command)
+  -a =====> linux commands (df -h, cp, cat )
+  -i =====> Inventory file path 
+  
+ ----------------------------------------------------------------------------------------------------------------------------
+ 
+  ansible -m ping client-1
+  ansible -m ping client-2
+  ansible -m ping client-1:client-2
+  ansible -m ping all
+  ansible -m ping -i client:children
+  ansible -m ping -i client client:children
+  ansible -m shell -a "df -h /var" -m client all
+  ansible -m shell -a "df -h /var" -i client all
+  ansible -m shell -a "df -h /var" -i client client-1
+  ansible -m shell -a "uptime" -i client client-1
+  ansible -m shell -a "uptime" -i client client-2
+  ansible -m shell -a "uptime" -i client all
+  
+ ---------------------------------------------------------------------------------------------------------------------------- 
+  
+  cd .ssh
+  ls
+  cat known_hosts
+  cat /dev/null> known_hosts
+  cat known_hosts
+  ansible -m shell -a "uptime" -i client all
+  
+ ---------------------------------------------------------------------------------------------------------------------------- 
+  
+cat /etc/ansible/ansible.cfg
+
+#inventory      = /etc/ansible/hosts
+#library        = /usr/share/my_modules/
+#module_utils   = /usr/share/my_module_utils/
+#remote_tmp     = ~/.ansible/tmp
+#local_tmp      = ~/.ansible/tmp
+#plugin_filters_cfg = /etc/ansible/plugin_filters.yml
+#forks          = 5
+#poll_interval  = 15
+#sudo_user      = root
+#ask_sudo_pass = True
+#ask_pass      = True
+#transport      = smart
+#remote_port    = 22
+#module_lang    = C
+#module_set_locale = False
+#host_key_checking = False
+
+----------------------------------------------------------------------------------------------------------------------------
+
+# cat ips
+[ips]
+vara-centos-45-[b:d]  =====>  (ok)         ///  vara-centos-45-[b-d]
+
+# ansible -m ping -i ips ips ============> it ping from host b, c, d 
+
+vara-centos-45-c | UNREACHABLE! => {
+    "changed": false,
+    "msg": "Failed to connect to the host via ssh: ssh: Could not resolve hostname vara-centos-45-c: Name or service not known",
+    "unreachable": true
+}
+vara-centos-45-d | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+vara-centos-45-b | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+
+---------------------------------------------------------------------------------------------------------------------------
+
+
+   #ansible -m shell -a "ls -l /tmp/" lab
+   
+   #ansible -m shell -a "ls -l /tmp/" -i client lab
+   
+   #ansible -m shell -a "rm -rf /tmp/*" -i client lab
+   
+   #ansible -m shell -a "ls -l /tmp/" -i client lab
+   
+   #ansible -m shell -a "touch /tmp/a" -i client lab
+   
+   #ansible -m shell -a "ls -l /tmp/" -i client lab
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------
+
+[alias-group] =========> To set Alias names in /etc/ansible/hosts file
+
+web ansible_host=10.10.45.201 ansible_connection=ssh ansible_user=root ansible_ssh_pass=root123
+
+web ansible_host=vara-centos-45-b ansible_connection=ssh ansible_user=root ansible_ssh_pass=root123
+
+----------------------------------------------------------------------------------------------------------------------------
+
+====================>  Inventory paramenters   <====================
+
+ansible_connection  			ssh/localhost/winrm
+ansible_port        			22/5986
+ansible_user        			root/Administrator/vara
+ansible_ssh_pass    			password
+ansible_ssh_private_key_file    <Browse the .perm file path>
+
+----------------------------------------------------------------------------------------------------------------------------
+
+vara-centos-45-b ansible_user=ec2-user ansible_ssh_private_key_file=/home/vara/vara-centos-45-b.perm ansible_connection=ssh 
+ansible_port=22
+
+----------------------------------------------------------------------------------------------------------------------------
+
+====================>  Setup (Ansible facts ) <====================
+
+  #ansible -m setup -i hosts server-1|less                or         #ansible -m setup vara-centos-45-b|less
+  
+  #ansible -m setup -i hosts server-1|grep -i "ansible_distribution"
+  
+   "ansible_distribution": "CentOS",
+        "ansible_distribution_file_parsed": true,
+        "ansible_distribution_file_path": "/etc/redhat-release",
+        "ansible_distribution_file_variety": "RedHat",
+        "ansible_distribution_major_version": "7",
+        "ansible_distribution_release": "Core",
+        "ansible_distribution_version": "7.9",
+		
+  #ansible -m setup -a "filter="ansible_distribution" vara-centos-45-b
+  
+  vara-centos-45-b | SUCCESS => {
+    "ansible_facts": {
+        "ansible_distribution": "CentOS",
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": false
+}
+
+  
+  "ansible_all_ipv4_addresses"
+  "ansible_architecture"
+  "ansible_bios_date"
+  "ansible_bios_version"
+  "ansible_cmdline"
+  "ansible_date_time"
+  "ansible_default_ipv4"
+  "uuids"
+  "model"
+  "ansible_distribution"
+  "device"
+  "macaddress"
+  "type"
+  
+  
+  
+  
+ # ansible -m setup -a "filter=ansible_python_version" vara-centos-45-b
+ 
+ 
+[WARNING]: Invalid characters were found in group names but not replaced, use -vvvv to see
+details
+vara-centos-45-b | SUCCESS => {
+    "ansible_facts": {
+        "ansible_python_version": "2.7.5",
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": false
+}
+
+  
+  
+  
+  #ansible -m setup -a "filter=ansible_python_version" vara-centos-45-b
+  
+  
+  
+  ---------------------------------------------------------------------------------------------------------------------------
+  
+  ===================> File <====================
+  
+  # ansible -m file -a "dest=/tmp/f1 state=touch" all   ==============> To create f1 file in /tmp by using touch command
+  
+[WARNING]: Invalid characters were found in group names but not replaced, use -vvvv to see
+details
+vara-centos-45-d | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": true,
+    "dest": "/tmp/f1",
+    "gid": 0,
+    "group": "root",
+    "mode": "0644",
+    "owner": "root",
+    "size": 0,
+    "state": "file",
+    "uid": 0
+}
+vara-centos-45-b | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": true,
+    "dest": "/tmp/f1",
+    "gid": 0,
+    "group": "root",
+    "mode": "0644",
+    "owner": "root",
+    "secontext": "unconfined_u:object_r:user_tmp_t:s0",
+    "size": 0,
+    "state": "file",
+    "uid": 0
+}
+
+Output:
+# cd /tmp
+[root@vara-centos-45-b tmp]# ls
+ansi  f1
+
+  ---------------------------------------------------------------------------------------------------------------------------
+  
+# ansible -m file -a "dest=/tmp/f1 state=absent" all    =========> To delete f1 file in /tmp by using state=absent
+
+[WARNING]: Invalid characters were found in group names but not replaced, use -vvvv to see
+details
+vara-centos-45-d | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": true,
+    "path": "/tmp/f1",
+    "state": "absent"
+}
+vara-centos-45-b | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": true,
+    "path": "/tmp/f1",
+    "state": "absent"
+}
+
+Output:
+
+# cd /tmp
+[root@vara-centos-45-b tmp]# ls
+ansi
+
+---------------------------------------------------------------------------------------------------------------------------
+
+# ansible -m file -a "dest=/tmp/dir1 state=directory" all
+
+[WARNING]: Invalid characters were found in group names but not replaced, use -vvvv to see
+details
+vara-centos-45-d | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": true,
+    "gid": 0,
+    "group": "root",
+    "mode": "0755",
+    "owner": "root",
+    "path": "/tmp/dir1",
+    "size": 4096,
+    "state": "directory",
+    "uid": 0
+}
+vara-centos-45-b | CHANGED => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python"
+    },
+    "changed": true,
+    "gid": 0,
+    "group": "root",
+    "mode": "0755",
+    "owner": "root",
+    "path": "/tmp/dir1",
+    "secontext": "unconfined_u:object_r:user_tmp_t:s0",
+    "size": 6,
+    "state": "directory",
+    "uid": 0
+}
+
+ Output:
+ 
+ 
+
+  #ansible -m file -a "dest=/tmp/f1" state=touch all
+  #ansible -m file -a "dest=/tmp/f1 state=touch" all
+  #ansible -m file -a "dest=/tmp/f1 state=absent" all
+  #ansible -m file -a "dest=/tmp/dir1 state=directory" all
+  #ansible -m file -a "dest=/tmp/d1 state=directory mode=700 owner=vara user=vara" all
+  
+
+---------------------------------------------------------------------------------------------------------------------------
+
+====================>  Lineinfile <====================
+
+  #ansible -m shell -a "cat /etc/resolv.conf" -i hosts server
+  
+  #ansible -m lineinfile -a "dest=/etc/resolv.conf line=nameserver  10.10.0.1" -i hosts server
+  
+  #ansible -m lineinfile -a "path=/etc/resolv.conf line='nameserver  10.10.0.1' state=absent" -i servers all
+  
+  ---------------------------------------------------------------------------------------------------------------------------
+  #ansible --list-hosts all
+  
+  #ansible --list-hosts -i hosts server
+  
+  ---------------------------------------------------------------------------------------------------------------------------
+  
+  #ansible -m raw -a "uptime" all
+  
+  #ansible -m raw -a "uptime" -i hosts server
+  
+ ---------------------------------------------------------------------------------------------------------------------------
+ 
+ ====================>  Copy <====================
+ 
+ 
+  #ansible -m copy -a "src=/etc/yum.repos.d/Ftprhel69.repo dest=/etc/yum.repos.d/" -i /root/servers all
+  
+  #ansible -m shell -a "ls -l /etc/yum.repos.d" -i /root/servers all
+  
+  #ansible -m copy -a "src=/etc/yum.repos.d/Ftprhel610.repo dest=/etc/yum.repos.d/" -i /root/servers all
+  
+  #ansible -m shell -a "ls -l /etc/yum.repos.d" -i /root/servers all
+  
+  #ansible -m shell -a "yum clean all" -i /root/servers all
+  #ansible -m shell -a "yum repolist" -i /root/servers all
+  
+  #ansible -m copy -a "src=.bashrc dest=/home/sai" -i /root/servers all
+  
+  #ansible -m copy -a "src=.bash_profile dest=/home/sai" -i /root/servers all
+  
+ --------------------------------------------------------------------------------------------------------------------------- 
+  
+  
+  ====================>  group and user <====================
+  
+  
+  #ansible -m shell -a "cat /etc/group" -i /root/servers all
+  #ansible -m shell -a "/etc/group" -i /root/servers all
+  
+  #ansible -m group -a "name=23a gid=2300" -i /root/servers all
+  #ansible -m shell -a "cat /etc/group" -i /root/servers all
+  
+  #ansible -m user -a "name=phani uid=2345 shell=/bin/bash group=2300 createhome=yes" -i /root/servers all
+  #ansible -m shell -a "cat /etc/passwd" -i /root/servers all
+  
+  --------------------------------------------------------------------------------------------------------------------
+  # openssl passwd -crypt   ===========> To create Encripted password
+	Password:
+	Verifying - Password:
+	KsiSRuayv2l7Y 
+  
+  openssl passwd -crypt
+  
+  ansible -m user -a "name=sai password=E0V9wAvUoXLME" -i servers all
+  ansible -m shell -a "cat /etc/shadow|grep -i sai" -i servers all
+  ---------------------------------------------------------------------------------------------------------------------
+  
+  #ansible -m user -a "name=phani password=$1$XYLg6IcU$xaIVhgtxyubGRBjIhqi7Y." -i servers all =============doubt
+  
+  #ansible -m group -a "name=23b gid=2400" -i /root/servers all
+  #ansible -m shell -a "cat /etc/group" -i /root/servers all
+  
+  #ansible -m user -a "name=sai group=2400 uid=2401 createhome=no shell=/bin/bash" -i /root/servers all
+  #ansible -m shell -a "id -a sai" -i servers all
+  #ansible -m shell -a "cat /etc/passwd" -i servers all
+  #ansible -m shell -a "ls -ld /home/sai" -i servers all
+  
+  
+  #ansible -m file -a "dest=/home/sai state=directory owner=sai group=23b mode=700" -i servers all
+  #ansible -m shell -a "cat /etc/group" -i servers all
+  
+  #ansible -m file -a "state=directory dest=/home/sai owner=sai group=23b mode=700" -i servers all
+  #ansible -m shell -a "id -a sai" -i servers all
+  
+  #ansible -m user -a "name=sai state=absent" -i /root/servers all
+  #ansible -m shell -a "id -a sai" -i /root/servers all
+  #ansible -m shell -a "cat /etc/passwd" -i /root/servers all
+  
+  #ansible -m group -a "name=23b state=absent" -i /root/servers all
+  #ansible -m shell -a "cat /etc/group" -i /root/servers all
+  
+  
+  ---------------------------------------------------------------------------------------------------------------------------
+  
+  ====================> Fetch Module commands <====================
+  
+  #ansible -m fetch -a "src=/etc/fstab dest=/tmp/fstab" -i servers all
+  #ansible -m fetch -a "src=/etc/fstab dest=/tmp/data flat=yes" -i servers all
+  #ansible -m fetch -a "src=/etc/fstab dest=/tmp/chiru/{{inventory_hostname}}_fstab flat=yes" -i servers all
+  
+  ---------------------------------------------------------------------------------------------------------------------------
+  
+  ====================>  Rpm/Yum and Service commands <====================
+  
+  #ansible -m copy -a "src=/etc/yum.repos.d/Rhel69.repo dest=/etc/yum.repos.d/" -i /root/servers all
+  #ansible -m shell -a "yum clean all" -i /root/servers all
+  #ansible -m shell -a "repolist" -i /root/servers all
+  
+  
+  #ansible -m shell -a "rpm -qa|grep -i vsftpd" -i /root/servers all
+  #ansible -m shell -a "service httpd status" -i servers all
+  #ansible -m service -a "name=httpd state=status" -i servers all
+  #ansible -m service -a "name=httpd" -i servers all
+  #ansible -m shell -a "service httpd status" -i servers all
+  #ansible -m service -a "name=httpd state=started" -i servers all
+  #ansible -m shell -a "service httpd status" -i servers all
+  
+  #ansible -m shell -a "chkconfig --list|grep -i httpd" -i servers all
+  #ansible -m service -a "name=httpd enabled=yes" -i servers all
+  #ansible -m shell -a "chkconfig --list|grep -i httpd" -i servers all
+  #ansible -m service -a "name=httpd enabled=no" -i servers all
+  #ansible -m shell -a "chkconfig --list|grep -i httpd" -i servers all
+  #ansible -m service -a "name=httpd state=stopped" -i servers all
+  #ansible -m shell -a "service httpd status" -i servers all
+  #ansible -m yum -a "name=httpd state=absent" -i servers all
+  #ansible -m shell -a "rpm -qa|grep -i httpd" -i servers all
+  
+  
+  
+  
+  ------------------------------------------------------------------------------------------------------------------------------
+  
+  
+  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Play Book <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  
+  # cat multitask.yml
+---
+ - name: Doing Multi Tasks
+   hosts: all
+   become: yes
+   tasks:
+    - yum: name=finger state=absent
+    - service: name=nfs state=stopped
+    - copy: src=/var/log/messages dest=/tmp/messages owner=vara group=vara mode=666
+    - group: name=members gid=5000 state=present
+    - user: name=laxmi uid=5001 group=members
+	- fetch: "src=/etc/fstab dest=/root/{{inventory_hostname}}_fstab flat=yes"
+	- lineinfile: dest=/etc/resolv.conf line='new line appended'
+...
+
+=====================================================================================================================
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Fetch Play Book <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+# cat fetching.yml
+---
+ - name: fetching the fstab
+   hosts: all
+   tasks:
+   - fetch: "src=/etc/fstab dest=/root/{{inventory_hostname}}_fstab flat=yes"
+...
+
+=======================================================================================================================
+# cat multy2.yml
+---
+ - name: multy tasks
+   hosts: all
+   tasks:
+     - ping:
+     - file: dest=/tmp/mtab2222 owner=laxmi mode=777 state=touch
+     - lineinfile: path=/etc/resolv.conf line='new line'
+     - group: name=23a gid=2300
+     - user: name=phani group=23a uid=2345 password=QIo8Sxy.EgRYI
+     - copy: src=/etc/mtab dest=/tmp/mtab_230328
+     - fetch: "src=/etc/resolv.conf dest=/tmp/{{inventory_hostname}}_resolv flat=yes"
+     - yum: name=finger state=present
+     - service: name=vsftpd state=started
+...
+
+=======================================================================================================================
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> O.S UPDATE Play Book <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+---
+ - name: Updating OS
+   hosts: client
+   tasks:
+     - yum: name=kernel state=latest
+...
+
+
+
+# cat update.yml
+---
+ - name: Updating OS
+   hosts: client
+   become: yes
+   tasks:
+     - yum: name='*' state=latest
+...
+
+
+# ansible-playbook update.yml --syntax-check
+
+playbook: update.yml
+
+=========================================================================================================================
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> OS.UPDATE AND DISPLAY OS-VERSION <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+---
+- name: package installtion
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update RHEL to version 6.10
+      yum:
+        name: "httpd"
+        state: present
+
+    - name: Reboot server
+      reboot:
+
+    - name: Wait for server to come back
+      wait_for_connection:
+        delay: 20
+        timeout: 160
+
+    - name: Check if server is updated
+      stat:
+        path: /etc/os-release
+      register: os_release
+
+    - name: Print message if server is updated
+      debug:
+        msg: "Server is updated to RHEL 6.9"
+      when: os_release.stat.exists
+...
+=============================================================================================================================
