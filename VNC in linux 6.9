@@ -1,0 +1,62 @@
+
+1) yum install tigervnc-server
+
+2) # vi /etc/sysconfig/vncservers
+# The VNCSERVERS variable is a list of display:user pairs.
+#
+# Uncomment the lines below to start a VNC server on display :2
+# as my 'myusername' (adjust this to your own).  You will also
+# need to set a VNC password; run 'man vncpasswd' to see how
+# to do that.
+#
+# DO NOT RUN THIS SERVICE if your local area network is
+# untrusted!  For a secure way of using VNC, see this URL:
+# https://access.redhat.com/knowledge/solutions/7027
+
+# Use "-nolisten tcp" to prevent X connections to your VNC server via TCP.
+
+# Use "-localhost" to prevent remote VNC clients connecting except when
+# doing so through a secure tunnel.  See the "-via" option in the
+# `man vncviewer' manual page.
+
+# VNCSERVERS="2:myusername"
+# VNCSERVERARGS[2]="-geometry 800x600 -nolisten tcp -localhost"
+VNCSERVERS="2:root"
+VNCSERVERARGS[2]="-geometry 1024*720
+
+
+3) # vncpasswd
+Password:
+Verify:
+
+4) # service vncserver restart
+/etc/sysconfig/vncservers: line 21: unexpected EOF while looking for matching `"'
+/etc/sysconfig/vncservers: line 22: syntax error: unexpected end of file
+Shutting down VNC server: 2:root                           [  OK  ]
+Starting VNC server: 2:root xauth: (stdin):1:  bad display name "vara-global-45:2" in "add" command
+
+New 'vara-global-45:2 (root)' desktop is vara-global-45:2
+
+Starting applications specified in /root/.vnc/xstartup
+Log file is /root/.vnc/vara-global-45:2.log
+
+                                                           [  OK  ]
+														 
+5) Open Mobiexterm and goto Terminals and select VNC 
+
+6) Type server ip:2 and select ok
+
+
+
+STEPS:
+
+
+Install pakages
+
+Edit configuration file
+
+Assign passwd
+
+Restart SERVICE
+
+Open Mobiexterm and connect through VNC
