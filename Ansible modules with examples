@@ -1,6 +1,4 @@
-  
-  
-  
+
   ansible --version
   cat /etc/ansible/ansible.cfg
   cat /etc/ansible/hosts
