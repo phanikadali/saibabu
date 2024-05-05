@@ -1,0 +1,137 @@
+                      UUID CHANGING
+
+                   BEFORE CHANGING UUID 
+				   
+[root@vara-sys-45 ~]#pvdisplay or pvs -v
+PV UUID: PmTak0-XJ4F-Qo4b-u6qp-MUaC-ZHn4-h1NmdO
+
+[root@vara-sys-45 ~]#vgdisplay or vgs -v
+VG UUID: nmazd4-M7sw-Nrge-vDmo-Q3w4-lhJX-MCG3Re
+
+[root@vara-sys-45 ~]#lvdisplay
+LV UUID: 7eNxtz-w0Tg-po0N-vJVG-fKaO-KzHb-gCcele
+
+[root@vara-sys-45 ~]#lsblk |grep -i /dev/xvdb
+/dev/xvdb: UUID="PmTak0-XJ4F-Qo4b-u6qp-MUaC-ZHn4-h1NmdO" TYPE="LVM2_member"
+
+[root@vara-sys-45 ~]#df -h /data
+Filesystem           Size  Used Avail Use% Mounted on
+/dev/mapper/vg1-lv1  956M   61M  896M   7% /data
+
+[root@vara-sys-45 ~]#lvscan
+ ACTIVE            '/dev/vg1/lv1' [1020.00 MiB] inherit
+ 
+                                     ERROR
+ 
+[root@vara-sys-45 ~]#fdisk /dev/xvdc
+
+Welcome to fdisk (util-linux 2.37.4).
+Changes will remain in memory only, until you decide to write them.
+Be careful before using the write command.
+
+The device contains 'LVM2_member' signature and it will be removed by a write command. See fdisk(8) man page and --wipe option for more details.
+
+Device does not contain a recognized partition table.
+Created a new DOS disklabel with disk identifier 0xa96dbd9c.
+
+Command (m for help): q
+
+[root@vara-sys-45 ~]#umount /data
+
+[root@vara-sys-45 ~]#vgchange -an vg1
+
+[root@vara-sys-45 ~]#lvscan
+inactive          '/dev/vg1/lv1' [1020.00 MiB] inherit
+
+[root@vara-sys-45 ~]#pvchange --uuid /dev/sdb
+  Physical volume "/dev/sdb" changed
+  1 physical volume changed / 0 physical volumes not changed
+  
+[root@vara-sys-45 ~]#pvdisplay or pvs -v
+NEW UUID: PbkekE-v3BJ-R7eZ-RwJI-gXkE-jimF-xxJwNP
+
+[root@vara-sys-45 ~]#vgchange --uuid vg1
+  Volume group "vg1" successfully changed
+
+[root@vara-sys-45 ~]#vgdisplay or vgs -v
+VG UUID               FwMBpw-FjGT-3Fui-qCET-sYh8-h0Xo-zFdkZg 
+ 
+[root@vara-sys-45 ~]#lvscan
+  inactive          '/dev/vg1/lv1' [1020.00 MiB] inherit
+  
+[root@vara-sys-45 ~]#vgchange -ay vg1
+  1 logical volume(s) in volume group "vg1" now active
+
+[root@vara-sys-45 ~]#lvscan
+  ACTIVE            '/dev/vg1/lv1' [1020.00 MiB] inherit
+ 
+[root@vara-sys-45 ~]#blkid |grep -i xvdb
+/dev/xvdb: UUID="PbkekE-v3BJ-R7eZ-RwJI-gXkE-jimF-xxJwNP" TYPE="LVM2_member"
+
+[root@vara-sys-45 ~]#vgrename vg1 oldvg1
+ Volume group "vg1" successfully renamed to "oldvg1"
+
+[root@vara-sys-45 ~]#lvrename /dev/oldvg1/lv1 /dev/oldvg1/oldlv1
+ Renamed "lv1" to "oldlv1" in volume group "oldvg1"
+
+[root@vara-sys-45 ~]#lvscan
+ ACTIVE            '/dev/oldvg1/oldlv1' [1020.00 MiB] inherit
+
+[root@vara-sys-45 ~]#mount /data
+
+
+[root@vara-sys-45 ~]#lsblk
+NAME              MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+xvda              202:0    0    8G  0 disk
+├─xvda1           202:1    0    8G  0 part /
+├─xvda127         259:0    0    1M  0 part
+└─xvda128         259:1    0   10M  0 part /boot/efi
+xvdb              202:16   0    1G  0 disk
+└─olddvg1-olddlv1 253:1    0 1020M  0 lvm  /data
+xvdc              202:32   0    1G  0 disk
+
+[root@vara-sys-45 ~]# blkid
+/dev/xvdb: UUID="PbkekE-v3BJ-R7eZ-RwJI-gXkE-jimF-xxJwNP" TYPE="LVM2_member"
+/dev/mapper/olddvg1-olddlv1: UUID="6d34c98d-bed8-4cf0-8db1-10b154594090" BLOCK_SIZE="512" TYPE="xfs"
+/dev/xvdc: UUID="PmTak0-XJ4F-Qo4b-u6qp-MUaC-ZHn4-h1NmdO" TYPE="LVM2_member"
+/dev/mapper/vg1-lv1: UUID="6d34c98d-bed8-4cf0-8db1-10b154594090" BLOCK_SIZE="512" TYPE="xfs"
+
+[root@vara-sys-45 ~]#pvs
+  PV         VG      Fmt  Attr PSize    PFree
+  /dev/sdb   olddvg1 lvm2 a--  1020.00m    0
+  /dev/sdc   vg1     lvm2 a--  1020.00m    0
+
+[root@vara-sys-45 ~]#vgs
+  VG      #PV #LV #SN Attr   VSize    VFree
+  olddvg1   1   1   0 wz--n- 1020.00m    0
+  vg1       1   1   0 wz--n- 1020.00m    0
+  
+[root@vara-sys-45 ~]#lvs
+  LV      VG      Attr       LSize    Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  olddlv1 olddvg1 -wi-ao---- 1020.00m
+  lv1     vg1     -wi------- 1020.00m
+
+[root@vara-sys-45 ~]# lvscan
+  inactive          '/dev/vg1/lv1' [1020.00 MiB] inherit
+  ACTIVE            '/dev/olddvg1/olddlv1' [1020.00 MiB] inherit
+
+[root@vara-sys-45 ~]# vgchange -ay
+  1 logical volume(s) in volume group "vg1" now active
+  1 logical volume(s) in volume group "olddvg1" now active
+
+[root@vara-sys-45 ~]# lvscan
+  ACTIVE            '/dev/vg1/lv1' [1020.00 MiB] inherit
+  ACTIVE            '/dev/olddvg1/olddlv1' [1020.00 MiB] inherit
+  
+[root@vara-sys-45 ~]# mount -t xfs /dev/vg1/lv1 /bata
+mount: /bata: wrong fs type, bad option, bad superblock on /dev/mapper/vg1-lv1, 
+missing codepage or helper program, or other error.
+
+
+
+
+
+mount -t xfs -o nouuid /dev/xvdb1 /mnt
+
+
+
