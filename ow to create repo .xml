@@ -1,0 +1,33 @@
+
+    #mount /dev/sr0 /mnt
+    #cd /mnt
+    #cd repodata/
+    #ls
+    #mkdir /tmp/packages
+    #cp -pvrf /mnt/Packages/* /tmp/packages/
+    #cd /tmp/packages/
+    #cd /mnt/Packages/
+    #rpm -ivh  createrepo-0.9.9-26.el6.noarch.rpm
+    #rpm -ivh python-deltarpm-3.5-0.5.20090913git.el6.x86_64.rpm
+    #ls python-deltarpm-3.5-0.5.20090913git.el6.x86_64.rpm
+    #rpm -ivh python-deltarpm-3.5-0.5.20090913git.el6.x86_64.rpm
+    #rpm -ivh deltarpm-3.5-0.5.20090913git.el6.x86_64.rpm
+    #rpm -ivh python-deltarpm-3.5-0.5.20090913git.el6.x86_64.rpm
+    #rpm -ivh  createrepo-0.9.9-26.el6.noarch.rpm
+    #cd /etc/yum.repos.d/
+    #ls
+    #vi mani.repo
+    #yum clean all
+    #yum repolist
+    #cd /tmp
+    #cd packages/
+    #ls
+    #ls |wc -l
+    #createrepo -vv /tmp/packages/
+    #ls -l *.xml
+    #ls
+    #cd repodata/
+    #ls
+    #yum clean all
+    #yum repolist
+  
